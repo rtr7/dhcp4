@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/google/gopacket/layers"
-	"github.com/mdlayher/raw"
+	"github.com/mdlayher/packet"
 	"github.com/rtr7/dhcp4"
 )
 
@@ -31,7 +31,7 @@ func Example() {
 		log.Fatal(err)
 	}
 	xidGen := dhcp4.XIDGenerator(iface.HardwareAddr)
-	conn, err := raw.ListenPacket(iface, syscall.ETH_P_IP, &raw.Config{LinuxSockDGRAM: true})
+	conn, err := packet.Listen(iface, packet.Datagram, syscall.ETH_P_IP, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
