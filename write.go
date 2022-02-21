@@ -19,7 +19,7 @@ import (
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/mdlayher/raw"
+	"github.com/mdlayher/packet"
 )
 
 var ip, udp = func() (*layers.IPv4, *layers.UDP) {
@@ -52,7 +52,7 @@ func Write(pc net.PacketConn, pkt *layers.DHCPv4) error {
 		udp,
 		pkt,
 	)
-	broadcast := &raw.Addr{HardwareAddr: layers.EthernetBroadcast}
+	broadcast := &packet.Addr{HardwareAddr: layers.EthernetBroadcast}
 	_, err := pc.WriteTo(buf.Bytes(), broadcast)
 	return err
 }
