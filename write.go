@@ -20,7 +20,6 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/mdlayher/packet"
-	"github.com/mdlayher/raw"
 )
 
 var ip, udp = func() (*layers.IPv4, *layers.UDP) {
@@ -54,15 +53,8 @@ func Write(pc net.PacketConn, pkt *layers.DHCPv4) error {
 		pkt,
 	)
 
-	// Temporary shim for mdlayher/raw to mdlayher/packet transition.
-	var broadcast net.Addr
-	switch pc.(type) {
-	case *packet.Conn:
-		broadcast = &packet.Addr{HardwareAddr: layers.EthernetBroadcast}
-	case *raw.Conn:
-		broadcast = &raw.Addr{HardwareAddr: layers.EthernetBroadcast}
-	}
-
-	_, err := pc.WriteTo(buf.Bytes(), broadcast)
+	_, err := pc.WriteTo(buf.Bytes(), &packet.Addr{
+		HardwareAddr: layers.EthernetBroadcast,
+	})
 	return err
 }
